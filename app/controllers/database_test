@@ -1,0 +1,137 @@
+mallesh@mallesh-H81M-S:~$ cd userpro/
+mallesh@mallesh-H81M-S:~/userpro$ rails s -p 7000
+=> Booting Puma
+=> Rails 5.2.3 application starting in development 
+=> Run `rails server -h` for more startup options
+Puma starting in single mode...
+* Version 3.12.1 (ruby 2.5.1-p57), codename: Llamas in Pajamas
+* Min threads: 5, max threads: 5
+* Environment: development
+* Listening on tcp://localhost:7000
+Use Ctrl-C to stop
+Started GET "/" for 127.0.0.1 at 2019-06-13 19:39:11 +0530
+   (0.1ms)  SELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC
+  ↳ /home/mallesh/.rvm/gems/ruby-2.5.1/gems/activerecord-5.2.3/lib/active_record/log_subscriber.rb:98
+Processing by HomeController#file1 as HTML
+Completed 401 Unauthorized in 10ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_in" for 127.0.0.1 at 2019-06-13 19:39:11 +0530
+Processing by Devise::SessionsController#new as HTML
+  Rendering devise/sessions/new.html.erb within layouts/application
+  Rendered devise/shared/_links.html.erb (1.2ms)
+  Rendered devise/sessions/new.html.erb within layouts/application (7.9ms)
+Completed 200 OK in 165ms (Views: 156.0ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/users/sign_up" for 127.0.0.1 at 2019-06-13 19:39:14 +0530
+Processing by Devise::RegistrationsController#new as HTML
+  Rendering devise/registrations/new.html.erb within layouts/application
+  Rendered devise/shared/_error_messages.html.erb (0.3ms)
+  Rendered devise/shared/_links.html.erb (0.6ms)
+  Rendered devise/registrations/new.html.erb within layouts/application (4.6ms)
+Completed 200 OK in 15ms (Views: 14.3ms | ActiveRecord: 0.0ms)
+
+
+^C- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2019-06-13 19:39:29 +0530 ===
+- Goodbye!
+Exiting
+mallesh@mallesh-H81M-S:~/userpro$ rake db:migrate
+mallesh@mallesh-H81M-S:~/userpro$ rails c
+Running via Spring preloader in process 2596
+Loading development environment (Rails 5.2.3)
+2.5.1 :001 > User.count
+   (0.1ms)  SELECT COUNT(*) FROM "users"
+ => 5 
+2.5.1 :002 > User.count
+   (0.2ms)  SELECT COUNT(*) FROM "users"
+ => 5 
+2.5.1 :003 > Employee.count
+   (0.1ms)  SELECT COUNT(*) FROM "employees"
+ => 0 
+2.5.1 :004 > Employee.new(name: "Devraj", age: 25)
+ => #<Employee id: nil, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: nil, updated_at: nil> 
+2.5.1 :005 > Employee.count
+   (0.3ms)  SELECT COUNT(*) FROM "employees"
+ => 0 
+2.5.1 :006 > e = Employee.new(name: "Devraj", age: 25)
+ => #<Employee id: nil, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: nil, updated_at: nil> 
+2.5.1 :007 > e.save
+   (0.2ms)  begin transaction
+  Employee Create (1.7ms)  INSERT INTO "employees" ("name", "age", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["name", "Devraj"], ["age", 25], ["created_at", "2019-06-13 14:24:12.323186"], ["updated_at", "2019-06-13 14:24:12.323186"]]
+   (10.9ms)  commit transaction
+ => true 
+2.5.1 :008 > e
+ => #<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12"> 
+2.5.1 :009 > Employee.count
+   (0.4ms)  SELECT COUNT(*) FROM "employees"
+ => 1 
+2.5.1 :010 > Employee.all
+  Employee Load (0.5ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12">]> 
+2.5.1 :011 > a = Employee.all
+  Employee Load (0.3ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12">]> 
+2.5.1 :012 > a.sal = 12333
+Traceback (most recent call last):
+        1: from (irb):12
+  Employee Load (0.1ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+NoMethodError (undefined method `sal=' for #<Employee::ActiveRecord_Relation:0x0000560c986a72a0>)
+2.5.1 :013 > a = Employee.first
+  Employee Load (0.6ms)  SELECT  "employees".* FROM "employees" ORDER BY "employees"."id" ASC LIMIT ?  [["LIMIT", 1]]
+ => #<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12"> 
+2.5.1 :014 > a.sal = 12333
+ => 12333 
+2.5.1 :015 > a
+ => #<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: 12333, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12"> 
+2.5.1 :016 > Employee.all
+  Employee Load (0.2ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12">]> 
+2.5.1 :017 > a.sal = 12333
+ => 12333 
+2.5.1 :018 > a.save
+   (0.1ms)  begin transaction
+  Employee Update (0.2ms)  UPDATE "employees" SET "sal" = ?, "updated_at" = ? WHERE "employees"."id" = ?  [["sal", 12333], ["updated_at", "2019-06-13 14:26:13.222866"], ["id", 1]]
+   (10.8ms)  commit transaction
+ => true 
+2.5.1 :019 > Employee.all
+  Employee Load (0.3ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: 12333, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:26:13">]> 
+2.5.1 :020 > 
+
+
+
+
+.5.1 :010 > Employee.all
+  Employee Load (0.5ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12">]> 
+2.5.1 :011 > a = Employee.all
+  Employee Load (0.3ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12">]> 
+2.5.1 :012 > a.sal = 12333
+Traceback (most recent call last):
+        1: from (irb):12
+  Employee Load (0.1ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+NoMethodError (undefined method `sal=' for #<Employee::ActiveRecord_Relation:0x0000560c986a72a0>)
+2.5.1 :013 > a = Employee.first
+  Employee Load (0.6ms)  SELECT  "employees".* FROM "employees" ORDER BY "employees"."id" ASC LIMIT ?  [["LIMIT", 1]]
+ => #<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12"> 
+2.5.1 :014 > a.sal = 12333
+ => 12333 
+2.5.1 :015 > a
+ => #<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: 12333, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12"> 
+2.5.1 :016 > Employee.all
+  Employee Load (0.2ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: nil, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:24:12">]> 
+2.5.1 :017 > a.sal = 12333
+ => 12333 
+2.5.1 :018 > a.save
+   (0.1ms)  begin transaction
+  Employee Update (0.2ms)  UPDATE "employees" SET "sal" = ?, "updated_at" = ? WHERE "employees"."id" = ?  [["sal", 12333], ["updated_at", "2019-06-13 14:26:13.222866"], ["id", 1]]
+   (10.8ms)  commit transaction
+ => true 
+2.5.1 :019 > Employee.all
+  Employee Load (0.3ms)  SELECT  "employees".* FROM "employees" LIMIT ?  [["LIMIT", 11]]
+ => #<ActiveRecord::Relation [#<Employee id: 1, name: "Devraj", dob: nil, age: 25, sal: 12333, created_at: "2019-06-13 14:24:12", updated_at: "2019-06-13 14:26:13">]> 
+2.5.1 :020 > 
